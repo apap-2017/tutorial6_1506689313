@@ -23,15 +23,17 @@ public class StudentController
 
 
     @RequestMapping("/")
-    public String index ()
+    public String index (Model model)
     {
+    	model.addAttribute("page_title", "Home");
         return "index";
     }
 
 
     @RequestMapping("/student/add")
-    public String add ()
+    public String add (Model model)
     {
+    	model.addAttribute("page_title", "Add Student");
         return "form-add";
     }
 
@@ -40,10 +42,13 @@ public class StudentController
     public String addSubmit (
             @RequestParam(value = "npm", required = false) String npm,
             @RequestParam(value = "name", required = false) String name,
-            @RequestParam(value = "gpa", required = false) double gpa)
+            @RequestParam(value = "gpa", required = false) double gpa,
+    		Model model)
     {
         StudentModel student = new StudentModel (npm, name, gpa, null);
         studentDAO.addStudent (student);
+        
+        model.addAttribute("page_title", "Add Student Successful");
 
         return "success-add";
     }
@@ -55,6 +60,8 @@ public class StudentController
     {
         StudentModel student = studentDAO.selectStudent (npm);
 
+        model.addAttribute("page_title", "View Student");
+        
         if (student != null) {
             model.addAttribute ("student", student);
             return "view";
@@ -70,6 +77,7 @@ public class StudentController
             @PathVariable(value = "npm") String npm)
     {
         StudentModel student = studentDAO.selectStudent (npm);
+        model.addAttribute("page_title", "View Student");
 
         if (student != null) {
             model.addAttribute ("student", student);
@@ -86,6 +94,8 @@ public class StudentController
     {
         List<StudentModel> students = studentDAO.selectAllStudents ();
         model.addAttribute ("students", students);
+        
+        model.addAttribute("page_title", "View All Students");
 
         return "viewall";
     }
@@ -95,7 +105,9 @@ public class StudentController
     public String delete (Model model, @PathVariable(value = "npm") String npm)
     {
         StudentModel student = studentDAO.selectStudent(npm);
-    	if(student == null) {
+        model.addAttribute("page_title", "Delete Student");
+        
+         if(student == null) {
     		return "not-found";
     	}
     	else {
@@ -107,6 +119,8 @@ public class StudentController
     @RequestMapping("student/update/{npm}")
     public String update (Model model, @PathVariable(value="npm") String npm) {
     	StudentModel student = studentDAO.selectStudent(npm);
+    	model.addAttribute("page_title", "Update Student");
+    	
     	if (student == null || npm == null) {
     		model.addAttribute("npm", npm);
     		return "not-found";
@@ -122,9 +136,11 @@ public class StudentController
     }
   
     @RequestMapping(value = "/student/update/submit", method = RequestMethod.POST)
-    public String updateSubmit (@ModelAttribute("student") StudentModel student) {
+    public String updateSubmit (@ModelAttribute("student") StudentModel student, Model model) {
     	
     	studentDAO.updateStudent(student);
+    	model.addAttribute("page_title", "Update Student Successful");
+    	
     	return "success-update";
     }
     
@@ -133,6 +149,7 @@ public class StudentController
     public String viewCourse (Model model, @PathVariable(value="idCourse") String id_course) {
     	CourseModel course = studentDAO.viewCourse(id_course);
     	model.addAttribute("course", course);
+    	model.addAttribute("page_title", "View Course Detail");
     	
     	return "course";
     }

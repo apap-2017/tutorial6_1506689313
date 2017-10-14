@@ -1,9 +1,10 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-    <head>
+    <head th:replace="fragments/fragment :: header">
         <title>View Student by NPM</title>
     </head>
     <body>
+    	<nav th:replace="fragments/fragment :: navbar"></nav>
        	<h3 th:text="'NPM = ' + ${student.npm}">Student NPM</h3>
        	<h3 th:text="'Name = ' + ${student.name}">Student Name</h3>
        	<h3 th:text="'GPA = ' + ${student.gpa}">Student GPA</h3>
